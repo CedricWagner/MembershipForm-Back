@@ -6,6 +6,7 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Repository\MemberRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MemberRepository::class)]
 #[ApiResource]
@@ -20,12 +21,15 @@ class Member
     private ?int $num = null;
 
     #[ORM\Column(length: 127)]
+    #[Assert\NotBlank]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 127)]
+    #[Assert\NotBlank]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Email]
     private ?string $email = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2)]
@@ -35,6 +39,14 @@ class Member
     private ?\DateTimeInterface $date = null;
 
     #[ORM\ManyToOne]
+    #[Assert\When(
+        expression: 'this.getAmount() == 0',
+        constraints: [new Assert\IsNull([], 'Vous ne pouvez pas saisir un moyen de paiement sans cotisation')]
+    )]
+    #[Assert\When(
+        expression: 'this.getAmount() > 0',
+        constraints: [new Assert\NotBlank([], 'Vous devez sélectionner un moyen de paiement')]
+    )]
     private ?PaymentMethod $paymentMethod = null;
 
     #[ORM\Column]

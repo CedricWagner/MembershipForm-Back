@@ -40,4 +40,62 @@ class MemberTest extends ApiTestCase
         $this->assertResponseIsSuccessful();
         $this->assertJsonContains(['num' => 22]);
     }
+
+    public function testPostItemWithoutAmount(): void
+    {
+        $container = static::getContainer();
+        $pm = $container->get(PaymentMethodRepository::class)->findOneBy(['name' => "CB"]);
+        $dateNow = new \DateTime();
+
+        $response = static::createClient()->request('POST', '/api/members', ['json' => [
+            'firstname' => 'Jotaro',
+            'lastname' => 'Kujo',
+            'email' => 'jojo@hotmail.jp',
+            'amount' => '0',
+            'willingToVolunteer' => false,
+            'date' => $dateNow->format('Y-m-d H:i:s'),
+        ]]);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonContains(['num' => 22]);
+    }
+
+    public function testPostItemWithoutPaymentMethodShouldFail(): void
+    {
+        $container = static::getContainer();
+        $pm = $container->get(PaymentMethodRepository::class)->findOneBy(['name' => "CB"]);
+        $dateNow = new \DateTime();
+
+        $response = static::createClient()->request('POST', '/api/members', ['json' => [
+            'firstname' => 'Jotaro',
+            'lastname' => 'Kujo',
+            'email' => 'jojo@hotmail.jp',
+            'amount' => '200',
+            'willingToVolunteer' => false,
+            'date' => $dateNow->format('Y-m-d H:i:s'),
+        ]]);
+
+        $this->assertResponseStatusCodeSame(422);
+        $this->assertJsonContains(['hydra:description' => 'paymentMethod: Vous devez sélectionner un moyen de paiement']);
+    }
+
+    public function testPostItemWithPaymentMethodButNoAmountShouldFail(): void
+    {
+        $container = static::getContainer();
+        $pm = $container->get(PaymentMethodRepository::class)->findOneBy(['name' => "CB"]);
+        $dateNow = new \DateTime();
+
+        $response = static::createClient()->request('POST', '/api/members', ['json' => [
+            'firstname' => 'Jotaro',
+            'lastname' => 'Kujo',
+            'email' => 'jojo@hotmail.jp',
+            'amount' => '0',
+            'willingToVolunteer' => false,
+            'paymentMethod' => '/api/payment_methods/' . $pm->getId(),
+            'date' => $dateNow->format('Y-m-d H:i:s'),
+        ]]);
+
+        $this->assertResponseStatusCodeSame(422);
+        $this->assertJsonContains(['hydra:description' => 'paymentMethod: Vous ne pouvez pas saisir un moyen de paiement sans cotisation']);
+    }
 }
