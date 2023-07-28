@@ -31,6 +31,7 @@ class MemberFixtures extends Fixture implements DependentFixtureInterface
         $member->setPaymentMethod($pms[0]);
 
         $manager->persist($member);
+        $manager->flush();
 
         // create other random members
         $faker = Faker\Factory::create('fr_FR');
@@ -53,6 +54,7 @@ class MemberFixtures extends Fixture implements DependentFixtureInterface
             $members[$i] = $member;
 
             $manager->persist($members[$i]);
+            $manager->flush();
         }
 
         $manager->flush();
