@@ -7,6 +7,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use App\Repository\PaymentMethodRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PaymentMethodRepository::class)]
 #[ApiResource(
@@ -23,6 +24,7 @@ class PaymentMethod
     private ?int $id = null;
 
     #[ORM\Column(length: 45)]
+    #[Groups('member')]
     private ?string $name = null;
 
     public function getId(): ?int

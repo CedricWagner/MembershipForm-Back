@@ -21,6 +21,6 @@ Provides API endpoints to
 
 ### Setup dev env
 - Setup composer `make up`
-
+- Or `SERVER_NAME=:80 docker compose up -d` to use HTTP over HTTPS
 
 See [Symfony Docker](https://github.com/dunglas/symfony-docker) 

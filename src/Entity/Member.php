@@ -6,36 +6,44 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Repository\MemberRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MemberRepository::class)]
-#[ApiResource]
+#[ApiResource(normalizationContext: ['groups' => ['member']])]
 class Member
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy:"AUTO")]
     #[ORM\Column]
+    #[Groups('member')]
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Groups('member')]
     private ?int $num = null;
 
     #[ORM\Column(length: 127)]
     #[Assert\NotBlank]
+    #[Groups('member')]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 127)]
     #[Assert\NotBlank]
+    #[Groups('member')]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\Email]
+    #[Groups('member')]
     private ?string $email = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2)]
+    #[Groups('member')]
     private ?string $amount = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups('member')]
     private ?\DateTimeInterface $date = null;
 
     #[ORM\ManyToOne]
@@ -47,9 +55,11 @@ class Member
         expression: 'this.getAmount() > 0',
         constraints: [new Assert\NotBlank([], 'Vous devez sélectionner un moyen de paiement')]
     )]
+    #[Groups('member')]
     private ?PaymentMethod $paymentMethod = null;
 
     #[ORM\Column]
+    #[Groups('member')]
     private ?bool $willingToVolunteer = null;
 
     public function getId(): ?int
