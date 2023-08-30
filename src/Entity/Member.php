@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\MemberRepository;
 use Doctrine\DBAL\Types\Types;
@@ -11,6 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MemberRepository::class)]
 #[ApiResource(normalizationContext: ['groups' => ['member']])]
+#[ApiFilter(DateFilter::class, properties: ['date'])]
 class Member
 {
     #[ORM\Id]
@@ -42,7 +45,7 @@ class Member
     #[Groups('member')]
     private ?string $amount = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
     #[Groups('member')]
     private ?\DateTimeInterface $date = null;
 
