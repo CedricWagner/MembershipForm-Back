@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Member;
+use DateTimeInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -21,20 +22,19 @@ class MemberRepository extends ServiceEntityRepository
         parent::__construct($registry, Member::class);
     }
 
-//    /**
-//     * @return Member[] Returns an array of Member objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('m')
-//            ->andWhere('m.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('m.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+   /**
+    * @return Member[] Returns an array of Member according to a date range
+    */
+   public function findByDateRange(DateTimeInterface $dateStart, DateTimeInterface $dateEnd): array
+   {
+       return $this->createQueryBuilder('m')
+           ->andWhere('m.date between :dateStart and :dateEnd')
+           ->setParameters(['dateStart' => $dateStart, 'dateEnd' => $dateEnd])
+           ->orderBy('m.num', 'ASC')
+           ->getQuery()
+           ->getResult()
+       ;
+   }
 
 //    public function findOneBySomeField($value): ?Member
 //    {
