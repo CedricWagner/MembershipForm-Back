@@ -1,6 +1,11 @@
 api_platform:
-  defaults:
-      pagination_client_enabled: true
-  collection:
-      pagination:
-          enabled_parameter_name: pagination # optional
+    defaults:
+        pagination_client_enabled: true
+    collection:
+        pagination:
+            enabled_parameter_name: pagination # optional
+    swagger:
+        api_keys:
+            JWT:
+                name: Authorization
+                type: header

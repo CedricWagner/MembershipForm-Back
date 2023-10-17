@@ -18,6 +18,8 @@
 **/Dockerfile
 **/Thumbs.db
 .github/
+config/jwt/private.pem
+config/jwt/public.pem
 docs/
 public/bundles/
 tests/
