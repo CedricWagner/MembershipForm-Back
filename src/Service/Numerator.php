@@ -6,7 +6,10 @@ use App\Repository\MemberRepository;
 
 class Numerator {
 
-    public function __construct(protected MemberRepository $memberRepository)
+    public function __construct(
+        protected int $startingNum,
+        protected MemberRepository $memberRepository
+        )
     {
     }
 
@@ -15,6 +18,10 @@ class Numerator {
             'num' => 'DESC'
         ]);
 
-        return $lastMember ? ($lastMember->getNum() + 1) : 1;
+        if (!$lastMember) {
+            return $this->startingNum;
+        }
+
+        return $lastMember->getNum() >= $this->startingNum ? $lastMember->getNum() + 1 : $this->startingNum;
     }
 }
