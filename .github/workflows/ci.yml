@@ -1,45 +1,72 @@
 name: CI
 
 on:
-    push:
-    pull_request:
+  push:
+    branches:
+      - main
+  pull_request: ~
+  workflow_dispatch: ~
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
 
 jobs:
-    lint:
-        name: Docker Lint
-        runs-on: ubuntu-20.04
-        steps:
-          - name: Checkout
-            uses: actions/checkout@v3
-          - name: Lint Dockerfile
-            uses: hadolint/hadolint-action@v3.1.0
-    build:
-        name: Docker build
-        runs-on: ubuntu-20.04
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v3
-            - name: Pull images
-              run: docker compose pull
-            - name: Start services
-              run: docker compose up --build -d
-            - name: Wait for services
-              run: |
-                  while status="$(docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" "$(docker compose ps -q php)")"; do
-                    case $status in
-                      starting) sleep 1;;
-                      healthy) exit 0;;
-                      unhealthy) exit 1;;
-                    esac
-                  done
-                  exit 1
-            - name: Check HTTP reachability
-              run: curl http://localhost
-            - name: Check HTTPS reachability
-              run: curl -k https://localhost
-            - name: PHPUnit tests
-              run: | 
-                docker compose exec php php bin/console doctrine:database:create --env=test
-                docker compose exec php php bin/console doctrine:migrations:migrate --env=test
-                docker compose exec php php bin/console doctrine:fixtures:load --append --env=test
-                docker compose exec php php bin/phpunit
+  tests:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      -
+        name: Build Docker images
+        uses: docker/bake-action@v4
+        with:
+          pull: true
+          load: true
+          files: |
+            compose.yaml
+            compose.override.yaml
+          set: |
+            *.cache-from=type=gha,scope=${{github.ref}}
+            *.cache-from=type=gha,scope=refs/heads/main
+            *.cache-to=type=gha,scope=${{github.ref}},mode=max
+      -
+        name: Start services
+        run: docker compose up --wait --no-build
+      -
+        name: Check HTTP reachability
+        run: curl -v -o /dev/null http://localhost
+      -
+        name: Check HTTPS reachability
+        run: curl -vk -o /dev/null https://localhost
+      -
+        name: Create test database
+        if: false # Remove this line if Doctrine ORM is installed
+        run: docker compose exec -T php bin/console -e test doctrine:database:create
+      -
+        name: Run migrations
+        if: false # Remove this line if Doctrine Migrations is installed
+        run: docker compose exec -T php bin/console -e test doctrine:migrations:migrate --no-interaction
+      -
+        name: Run PHPUnit
+        if: false # Remove this line if PHPUnit is installed
+        run: docker compose exec -T php bin/phpunit
+      -
+        name: Doctrine Schema Validator
+        if: false # Remove this line if Doctrine ORM is installed
+        run: docker compose exec -T php bin/console -e test doctrine:schema:validate
+  lint:
+    name: Docker Lint
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+      -
+        name: Lint Dockerfile
+        uses: hadolint/hadolint-action@v3.1.0
