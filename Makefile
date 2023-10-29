@@ -57,3 +57,10 @@ cc: sf
 test: ## launch test suits or pass the parameter "c=" to run a given file test, example: c=tests/Form
 	@$(eval c ?=)
 	@$(PHPUNIT) $(c)
+## —— Prod —————————————————————————————————————————————————————————————————————
+up-prod:
+	@$(DOCKER_COMP) -f docker-compose.yaml -f docker-compose.prod.yaml pull 
+	@$(DOCKER_COMP) -f docker-compose.yaml -f docker-compose.prod.yaml up -d --remove-orphans 
+
+stop-prod:
+	@$(DOCKER_COMP) -f docker-compose.yaml -f docker-compose.prod.yaml stop --remove-orphans 
