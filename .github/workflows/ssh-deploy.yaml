@@ -97,4 +97,5 @@ jobs:
             make up-preprod
             sleep 3
             make sf c="doctrine:migrations:migrate --no-interaction"
+            make sf c="lexik:jwt:generate-keypair"
             make cc
