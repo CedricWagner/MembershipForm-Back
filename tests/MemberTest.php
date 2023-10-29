@@ -32,7 +32,7 @@ class MemberTest extends AbstractApiTest
         ]]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertJsonContains(['num' => 1000]);
+        $this->assertJsonContains(['num' => 1021]);
         
         $this->createAuthClient()->request('POST', '/api/members', ['json' => [
             'firstname' => 'Dio',
@@ -45,7 +45,7 @@ class MemberTest extends AbstractApiTest
         ]]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertJsonContains(['num' => 1001]);
+        $this->assertJsonContains(['num' => 1022]);
     }
 
     public function testPostItemWithoutAmount(): void
@@ -62,7 +62,7 @@ class MemberTest extends AbstractApiTest
         ]]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertJsonContains(['num' => 1000]);
+        $this->assertJsonContains(['num' => 1021]);
     }
 
     public function testPostItemWithoutPaymentMethodShouldFail(): void
