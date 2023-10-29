@@ -1,0 +1,53 @@
+version: "3"
+
+services:
+  preprod-adhesion-postgres:
+    image: wodby/postgres:15-1.31.4
+    container_name: "preprod_adhesion_postgres"
+    stop_grace_period: 30s
+    environment:
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_DB: app
+      POSTGRES_USER: app
+
+  preprod-adhesion-php:
+    image: wodby/php:$PHP_TAG
+    container_name: "preprod_adhesion_php"
+    environment:
+      SSMTP_MAILHUB: opensmtpd:25
+      PHP_SENDMAIL_PATH: '"/usr/bin/dos2unix -u | /usr/sbin/ssmtp -t -f"'
+      DB_HOST: preprod-adhesion-postgres
+      DB_USER: app
+      DB_PASSWORD: $DB_PASSWORD
+      DB_NAME: app
+      PHP_FPM_USER: wodby
+      PHP_FPM_GROUP: wodby
+      PHP_SHORT_OPEN_TAG: 0
+      PHP_POST_MAX_SIZE: 64M
+    volumes:
+    - ../:/var/www/html:cached
+
+  preprod-adhesion-nginx:
+    image: wodby/nginx:$NGINX_TAG
+    container_name: "preprod_adhesion_nginx"
+    depends_on:
+    - preprod-adhesion-php
+    environment:
+      VIRTUAL_HOST: test.back.adhesion.mc.cedric-wagner.fr
+      NGINX_STATIC_OPEN_FILE_CACHE: "off"
+      NGINX_ERROR_LOG_LEVEL: debug
+      NGINX_BACKEND_HOST: preprod-adhesion-php
+      NGINX_VHOST_PRESET: php
+      NGINX_SERVER_ROOT: /var/www/html/public
+      NGINX_FASTCGI_BUFFER_SIZE: 64k
+      NGINX_CLIENT_BODY_BUFFER_SIZE: 64k
+    volumes:
+    - ../:/var/www/html:cached
+
+volumes:
+  dbdata:
+
+networks:
+  default:
+    external:
+      name: nginx-proxy
