@@ -59,7 +59,6 @@ test: ## launch test suits or pass the parameter "c=" to run a given file test, 
 	@$(PHPUNIT) $(c)
 ## —— Prod —————————————————————————————————————————————————————————————————————
 up-prod:
-	@$(DOCKER_COMP) -f compose.yaml -f compose.prod.yaml pull 
 	@$(DOCKER_COMP) -f compose.yaml -f compose.prod.yaml up -d --remove-orphans 
 
 stop-prod:
