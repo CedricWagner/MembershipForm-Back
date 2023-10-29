@@ -82,7 +82,7 @@ jobs:
           script: |
             cd ${{ secrets.REMOTE_TARGET }}
             cd docker
-            sed -i 's/DB_PASSWORD=site_perso/DB_PASSWORD=${{ secrets.DB_PASSWORD }}/' .env
+            sed -i 's/POSTGRES_PASSWORD=ChangeMe/POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}/' .env
       # Run commands on production
       - name: Executing remote ssh commands
         uses: appleboy/ssh-action@master
