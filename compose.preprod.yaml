@@ -6,26 +6,26 @@ services:
     container_name: "preprod_adhesion_postgres"
     stop_grace_period: 30s
     environment:
-      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-}
       POSTGRES_DB: app
       POSTGRES_USER: app
 
   preprod-adhesion-php:
-    image: wodby/php:8.2.11
+    image: wodby/php:8.2
     container_name: "preprod_adhesion_php"
     environment:
       SSMTP_MAILHUB: opensmtpd:25
       PHP_SENDMAIL_PATH: '"/usr/bin/dos2unix -u | /usr/sbin/ssmtp -t -f"'
       DB_HOST: preprod-adhesion-postgres
       DB_USER: app
-      DB_PASSWORD: $DB_PASSWORD
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-}
       DB_NAME: app
       PHP_FPM_USER: wodby
       PHP_FPM_GROUP: wodby
       PHP_SHORT_OPEN_TAG: 0
       PHP_POST_MAX_SIZE: 64M
     volumes:
-    - ../:/var/www/html:cached
+    - ./:/var/www/html:cached
 
   preprod-adhesion-nginx:
     image: wodby/nginx:1.25-5.33.6
