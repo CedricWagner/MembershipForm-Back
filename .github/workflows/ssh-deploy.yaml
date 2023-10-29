@@ -81,7 +81,7 @@ jobs:
           passphrase: ''
           script: |
             cd ${{ secrets.REMOTE_TARGET }}
-            cd docker
+            sed -i 's/exec php/exec preprod-adhesion-php/' Makefile
             sed -i 's/POSTGRES_PASSWORD=ChangeMe/POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}/' .env
       # Run commands on production
       - name: Executing remote ssh commands
@@ -96,4 +96,5 @@ jobs:
             make stop-preprod
             make up-preprod
             sleep 3
-            make exec "php bin/console doctrine:migrations:migrate --env=prod"
+            make sf c="doctrine:migrations:migrate --no-interaction"
+            make cc
