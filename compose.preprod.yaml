@@ -11,7 +11,7 @@ services:
       POSTGRES_USER: app
 
   preprod-adhesion-php:
-    image: wodby/php:$PHP_TAG
+    image: wodby/php:8.2.11
     container_name: "preprod_adhesion_php"
     environment:
       SSMTP_MAILHUB: opensmtpd:25
@@ -28,7 +28,7 @@ services:
     - ../:/var/www/html:cached
 
   preprod-adhesion-nginx:
-    image: wodby/nginx:$NGINX_TAG
+    image: wodby/nginx:1.25-5.33.6
     container_name: "preprod_adhesion_nginx"
     depends_on:
     - preprod-adhesion-php

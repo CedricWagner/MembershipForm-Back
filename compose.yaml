@@ -1,7 +1,7 @@
 version: "3.4"
 
 services:
-  back-adhesion-php:
+  php:
     image: ${IMAGES_PREFIX:-}app-php
     restart: unless-stopped
     environment:
@@ -41,7 +41,7 @@ services:
 ###< symfony/mercure-bundle ###
 
 ###> doctrine/doctrine-bundle ###
-  back-adhesion-database:
+  database:
     image: postgres:${POSTGRES_VERSION:-15}-alpine
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-app}
