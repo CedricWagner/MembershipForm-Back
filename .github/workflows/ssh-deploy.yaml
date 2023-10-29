@@ -71,8 +71,6 @@ jobs:
             cd ${{ secrets.REMOTE_TARGET }}
             pwd
             ls -al 
-      # Override docker .env passwords with secrets
-      - name: Make docker production envfile
       # Run commands on production
       - name: Executing remote ssh commands
         uses: appleboy/ssh-action@master
