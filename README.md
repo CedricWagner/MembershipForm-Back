@@ -16,11 +16,26 @@ Provides API endpoints to
 
 ### Prerequisites
 
+- Install Docker
 - Install Docker Compose
 - Install Make 
 
 ### Setup dev env
 - Setup composer `make up`
-- Or `SERVER_NAME=:80 docker compose up -d` to use HTTP over HTTPS
+- Init database `make sf c="doctrine:database:create"` (if the database is already created, you will be prompted an error, just go to the next step)
+- Apply migrations `make sf c="doctrine:migrations:migrate"`
+- Load test contents `make sf c="doctrine:fixtures:load"`
+- Set up test env `make sf c="doctrine:database:create --no-interaction --env=test" && make sf c="doctrine:migrations:migrate --no-interaction --env=test" && make sf c="doctrine:fixtures:load --no-interaction --env=test"`
 
-See [Symfony Docker](https://github.com/dunglas/symfony-docker) 
+### Make tests
+- `make test`
+
+### Contribution
+- todo
+
+### Resources
+- Docker stack used: [Docker4PHP By Wodby](https://github.com/wodby/docker4php)
+- Framework: [Symfony](https://symfony.com/)
+- API: [Plateform API](https://api-platform.com/)
+- Authentication: [JWT Token](https://symfony.com/bundles/LexikJWTAuthenticationBundle/current/index.html)
+- Deployment: [Github actions](https://docs.github.com/fr/actions)

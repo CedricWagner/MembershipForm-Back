@@ -12,36 +12,31 @@ jobs:
   tests:
     name: Tests
     runs-on: ubuntu-latest
+        services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_PASSWORD: adhesion_mc_backend
+          POSTGRES_DB: adhesion_mc_backend_test
+          POSTGRES_USER: adhesion_mc_backend
     steps:
-      -
-        name: Checkout
-        uses: actions/checkout@v4
-      -
-        name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      -
-        name: Build Docker images
-        uses: docker/bake-action@v4
+      - 
+        uses: shivammathur/setup-php@v2
         with:
-          pull: true
-          load: true
-          files: |
-            compose.yaml
-            compose.override.yaml
-          set: |
-            *.cache-from=type=gha,scope=${{github.ref}}
-            *.cache-from=type=gha,scope=refs/heads/main
-            *.cache-to=type=gha,scope=${{github.ref}},mode=max
-      -
-        name: Start services
-        run: docker compose up --wait --no-build
-      -
-        name: Check HTTP reachability
-        run: curl -v -o /dev/null http://localhost
-      -
-        name: Check HTTPS reachability
-        run: curl -vk -o /dev/null https://localhost
-      -
+          php-version: 8.2.12
+          extensions: mbstring, xml, ctype, iconv, intl, pdo, pdo_mysql, dom, filter, gd, iconv, json, mbstring
+        env:
+          update: true
+      - uses: actions/checkout@v3
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-
+      -  
         name: Create test database
         run: docker compose exec -T php bin/console -e test doctrine:database:create
       -
@@ -56,13 +51,3 @@ jobs:
       -
         name: Doctrine Schema Validator
         run: docker compose exec -T php bin/console -e test doctrine:schema:validate
-  lint:
-    name: Docker Lint
-    runs-on: ubuntu-latest
-    steps:
-      -
-        name: Checkout
-        uses: actions/checkout@v4
-      -
-        name: Lint Dockerfile
-        uses: hadolint/hadolint-action@v3.1.0
