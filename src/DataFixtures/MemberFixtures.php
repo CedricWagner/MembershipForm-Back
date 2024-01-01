@@ -26,6 +26,7 @@ class MemberFixtures extends Fixture implements DependentFixtureInterface
         $member->setAmount(5);
         $member->setDate(new DateTime());
         $member->setWillingToVolunteer(true);
+        $member->setSubscribedToNewsletter(true);
         $member->setNum(1);
         $member->setEmail('test@cedricwagner.fr');
         $member->setPaymentMethod($pms[0]);
@@ -45,6 +46,7 @@ class MemberFixtures extends Fixture implements DependentFixtureInterface
             $member->setAmount(random_int(0, 5));
             $member->setDate(new DateTime());
             $member->setWillingToVolunteer((bool)random_int(0, 1));
+            $member->setSubscribedToNewsletter((bool)random_int(0, 1));
             $member->setNum($currentNum);
             $member->setEmail($faker->email);
             if ($member->getAmount() > 0) {

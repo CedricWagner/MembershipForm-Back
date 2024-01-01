@@ -36,8 +36,9 @@ class Member
     #[Groups('member')]
     private ?string $lastname = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255, nullable: false)]
     #[Assert\Email]
+    #[Assert\NotBlank]
     #[Groups('member')]
     private ?string $email = null;
 
@@ -64,6 +65,10 @@ class Member
     #[ORM\Column]
     #[Groups('member')]
     private ?bool $willingToVolunteer = null;
+    
+    #[ORM\Column]
+    #[Groups('member')]
+    private ?bool $subscribedToNewsletter = null;
 
     public function getId(): ?int
     {
@@ -162,6 +167,18 @@ class Member
     public function setWillingToVolunteer(bool $willingToVolunteer): static
     {
         $this->willingToVolunteer = $willingToVolunteer;
+
+        return $this;
+    }
+
+    public function isSubscribedToNewsletter(): ?bool
+    {
+        return $this->subscribedToNewsletter;
+    }
+
+    public function setSubscribedToNewsletter(bool $subscribedToNewsletter): static
+    {
+        $this->subscribedToNewsletter = $subscribedToNewsletter;
 
         return $this;
     }

@@ -27,6 +27,7 @@ class MemberTest extends AbstractApiTest
             'email' => 'jojo@hotmail.jp',
             'amount' => '200',
             'willingToVolunteer' => false,
+            'subscribedToNewsletter' => false,
             'paymentMethod' => '/api/payment_methods/' . $pm->getId(),
             'date' => $dateNow->format('Y-m-d H:i:s'),
         ]]);
@@ -40,6 +41,7 @@ class MemberTest extends AbstractApiTest
             'email' => 'zawardo@hotmail.jp',
             'amount' => '200',
             'willingToVolunteer' => false,
+            'subscribedToNewsletter' => false,
             'paymentMethod' => '/api/payment_methods/' . $pm->getId(),
             'date' => $dateNow->format('Y-m-d H:i:s'),
         ]]);
@@ -58,6 +60,7 @@ class MemberTest extends AbstractApiTest
             'email' => 'jojo@hotmail.jp',
             'amount' => '0',
             'willingToVolunteer' => false,
+            'subscribedToNewsletter' => false,
             'date' => $dateNow->format('Y-m-d H:i:s'),
         ]]);
 
@@ -77,6 +80,7 @@ class MemberTest extends AbstractApiTest
             'email' => 'jojo@hotmail.jp',
             'amount' => '200',
             'willingToVolunteer' => false,
+            'subscribedToNewsletter' => false,
             'date' => $dateNow->format('Y-m-d H:i:s'),
         ]]);
 
@@ -96,6 +100,7 @@ class MemberTest extends AbstractApiTest
             'email' => 'jojo@hotmail.jp',
             'amount' => '0',
             'willingToVolunteer' => false,
+            'subscribedToNewsletter' => false,
             'paymentMethod' => '/api/payment_methods/' . $pm->getId(),
             'date' => $dateNow->format('Y-m-d H:i:s'),
         ]]);
