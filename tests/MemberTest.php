@@ -8,11 +8,14 @@ class MemberTest extends AbstractApiTest
 {
     public function testGetCollection(): void
     {
-        $this->createAuthClient()->request('GET', '/api/members');
+        /** @var \ApiPlatform\Symfony\Bundle\Test\Response */
+        $response = $this->createAuthClient()->request('GET', '/api/members?pagination=false');
         
+        $result = json_decode($response->getContent());
+
         $this->assertResponseIsSuccessful();
         $this->assertJsonContains(['@id' => '/api/members']);
-        $this->assertJsonContains(['hydra:totalItems' => 21]);
+        $this->assertCount(51, $result->{'hydra:member'});
     }
 
     public function testPostItem(): void
@@ -33,7 +36,7 @@ class MemberTest extends AbstractApiTest
         ]]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertJsonContains(['num' => 1021]);
+        $this->assertJsonContains(['num' => 1051]);
         
         $this->createAuthClient()->request('POST', '/api/members', ['json' => [
             'firstname' => 'Dio',
@@ -47,7 +50,7 @@ class MemberTest extends AbstractApiTest
         ]]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertJsonContains(['num' => 1022]);
+        $this->assertJsonContains(['num' => 1052]);
     }
 
     public function testPostItemWithoutAmount(): void
@@ -65,7 +68,7 @@ class MemberTest extends AbstractApiTest
         ]]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertJsonContains(['num' => 1021]);
+        $this->assertJsonContains(['num' => 1051]);
     }
 
     public function testPostItemWithoutPaymentMethodShouldFail(): void

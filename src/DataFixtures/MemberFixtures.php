@@ -38,7 +38,7 @@ class MemberFixtures extends Fixture implements DependentFixtureInterface
         $faker = Faker\Factory::create('fr_FR');
         $currentNum = $member->getNum();
         $members = [];
-        for ($i = 0; $i < 20; $i++) {
+        for ($i = 0; $i < 50; $i++) {
             $currentNum++;
             $member = new Member();
             $member->setLastname($faker->lastName);

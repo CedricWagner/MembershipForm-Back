@@ -12,7 +12,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MemberRepository::class)]
-#[ApiResource(normalizationContext: ['groups' => ['member']])]
+#[ApiResource(normalizationContext: ['groups' => ['member']], paginationClientEnabled:true)]
 #[ApiFilter(DateFilter::class, properties: ['date'])]
 class Member
 {
