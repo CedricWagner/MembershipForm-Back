@@ -36,6 +36,7 @@ security:
         - { path: ^/api/payment_methods, roles: PUBLIC_ACCESS, method: GET }
         - { path: ^/api/members, roles: PUBLIC_ACCESS, method: POST }
         - { path: ^/api/auth, roles: PUBLIC_ACCESS }
+        - { path: ^/api/keep-alive, roles: PUBLIC_ACCESS }
         - { path: ^/api/, roles: ROLE_USER }
         - { path: ^/api, roles: PUBLIC_ACCESS }
         - { path: ^/, roles: PUBLIC_ACCESS }
