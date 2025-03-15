@@ -1,14 +1,25 @@
 version: "3"
 
 services:
-  postgres:
-    image: wodby/postgres:$POSTGRES_TAG
-    container_name: "${PROJECT_NAME}_postgres"
+  mariadb:
+    image: wodby/mariadb:$MARIADB_TAG
+    container_name: "${PROJECT_NAME}_mariadb"
     stop_grace_period: 30s
     environment:
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-}
-      POSTGRES_DB: ${DB_NAME:-}
-      POSTGRES_USER: ${DB_USER:-}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-}
+      MYSQL_DATABASE: ${DB_NAME:-}
+      MYSQL_USER: ${DB_USER:-}
+  
+  mariadbtest:
+    image: wodby/mariadb:$MARIADB_TAG
+    container_name: "${PROJECT_NAME}_mariadbtest"
+    stop_grace_period: 30s
+    environment:
+      MYSQL_PASSWORD: ${DB_PASSWORD:-}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-}
+      MYSQL_DATABASE: ${DB_NAME:-}_test
+      MYSQL_USER: ${DB_USER:-}
 
   php:
     image: wodby/php:$PHP_TAG
