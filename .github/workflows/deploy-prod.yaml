@@ -1,4 +1,4 @@
-name: FTP Deploy to prod
+name: SSH Deploy to prod
 
 on:
   push:
@@ -36,19 +36,25 @@ jobs:
       # Install backend dependencies (Composer)
       - name: Validate composer.json and composer.lock
         run: composer validate
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - name: Cache composer dependencies
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
       - name: Install Composer dependencies
         run: composer install --no-dev
-      - name: 📂 Sync files
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      # Copying files and artifacts via SSH
+      - name: Copying files to server
+        uses: appleboy/scp-action@master
         with:
-          server: ${{ secrets.REMOTE_HOST }}
+          host: ${{ secrets.REMOTE_HOST }}
           username: ${{ secrets.REMOTE_USER }}
-          password: ${{ secrets.REMOTE_PASSWORD }}
-          server-dir: ./
-          local-dir: ./
-          exclude: |
-            **/.git*
-            **/.git*/**
-            .github/**
-            var/**
-            compose.**
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          passphrase: ''
+          rm: false
+          source: "./"
+          target: ${{ secrets.REMOTE_TARGET }}
