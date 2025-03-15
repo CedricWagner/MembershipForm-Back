@@ -49,3 +49,16 @@ jobs:
           rm: false
           source: "./"
           target: ${{ secrets.REMOTE_TARGET }}
+      # Run commands on production
+      - name: Executing remote ssh commands
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          passphrase: ''
+          script: |
+            cd ${{ secrets.REMOTE_TARGET }}
+            /usr/bin/php-8.2 bin/console doctrine:migrations:migrate --no-interaction
+            /usr/bin/php-8.2 bin/console lexik:jwt:generate-keypair
+            /usr/bin/php-8.2 bin/console c:c
