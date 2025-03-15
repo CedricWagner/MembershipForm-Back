@@ -1,0 +1,63 @@
+name: SSH Deploy
+
+on:
+  push:
+    branches:
+      - main
+      - feat/prepare-for-prod
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: prod
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      # Install PHP
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2.11
+          extensions: mbstring, xml, ctype, iconv, intl, pdo, pdo_mysql, dom, filter, gd, iconv, json, mbstring
+        env:
+          update: true
+      - name: Check PHP Version
+        run: php -v
+      # Prepare .env file for production
+      - name: Make production envfile
+        uses: SpicyPizza/create-envfile@v1
+        with:
+          envkey_APP_ENV: prod
+          envkey_APP_DEBUG: false
+          envkey_APP_SECRET: ${{ secrets.APP_SECRET }}
+          envkey_DATABASE_URL:  ${{ secrets.DATABASE_URL }}
+          envkey_CORS_ALLOW_ORIGIN: ${{ vars.CORS_ALLOW_ORIGIN }}
+          envkey_JWT_PASSPHRASE: ${{ secrets.JWT_PASSPHRASE }}
+          file_name: .env.local
+      # Install backend dependencies (Composer)
+      - name: Validate composer.json and composer.lock
+        run: composer validate
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - name: Cache composer dependencies
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+      - name: Install Composer dependencies
+        run: composer install --no-dev
+      - name: 📂 Sync files
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          password: ${{ secrets.REMOTE_PASSWORD }}
+          server-dir: ./
+          local-dir: ./dist/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            .github/**
+            var/**
+            compose.**
