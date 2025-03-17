@@ -13,19 +13,21 @@ jobs:
     name: Tests
     runs-on: ubuntu-latest
     services:
-      postgres:
-        image: postgres:latest
+      mysql:
+        image: mysql:9.2
         env:
-          POSTGRES_PASSWORD: adhesion_mc_backend
-          POSTGRES_DB: adhesion_mc_backend_test
-          POSTGRES_USER: adhesion_mc_backend
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+          # The MySQL docker container requires these environment variables to be set
+          # so we can create and migrate the test database.
+          # See: https://hub.docker.com/_/mysql
+          MYSQL_DATABASE: adhesion_mc_backend_test
+          MYSQL_ROOT_PASSWORD: adhesion_mc_backend
         ports:
-          - 5432:5432
+          # Opens port 3306 on service container and host
+          # https://docs.github.com/en/actions/using-containerized-services/about-service-containers
+          - 3306:3306
+          # Before continuing, verify the mysql container is reachable from the ubuntu host
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
     steps:
       - 
         uses: shivammathur/setup-php@v2
@@ -47,13 +49,10 @@ jobs:
         uses: SpicyPizza/create-envfile@v1
         with:
           envkey_APP_ENV: test
-          envkey_DATABASE_URL:  postgresql://adhesion_mc_backend:adhesion_mc_backend@127.0.0.1:5432/adhesion_mc_backend_test?serverVersion=15&charset=utf8
+          envkey_DATABASE_URL:  mysql://root:adhesion_mc_backend@127.0.0.1:3306/adhesion_mc_backend?serverVersion=11.4&charset=utf8mb4
           file_name: .env.test.local
       - name: Install Dependencies
         run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
-      -  
-        name: Create test database
-        run: php bin/console -e test doctrine:database:create
       -
         name: Run migrations
         run: php bin/console -e test doctrine:migrations:migrate --no-interaction
