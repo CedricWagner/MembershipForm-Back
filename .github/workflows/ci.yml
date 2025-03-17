@@ -47,7 +47,7 @@ jobs:
         uses: SpicyPizza/create-envfile@v1
         with:
           envkey_APP_ENV: test
-          envkey_DATABASE_URL:  postgresql://adhesion_mc_backend:adhesion_mc_backend@127.0.0.1:5432/adhesion_mc_backend_test?serverVersion=15&charset=utf8
+          envkey_DATABASE_URL:  mysql://adhesion_mc_backend:adhesion_mc_backend@127.0.0.1:3306/adhesion_mc_backend_test?serverVersion=11.4&charset=utf8mb4
           file_name: .env.test.local
       - name: Install Dependencies
         run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
