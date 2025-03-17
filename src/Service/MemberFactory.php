@@ -32,16 +32,16 @@ class MemberFactory
         string $subscribedToNewsletter
         ): Member
     {
-        
-        $member = $this->memberRepository->findOneBy(['num' => $num]);
-        
-        if (!$member) {
-            $member = new Member();
-        }
 
         $parsedNum = $this->getNumFromCSVValue($num);
         if (!$parsedNum) {
             throw new \Exception(sprintf('Incorrect "num" field from CSV: %s', $num));
+        }
+        
+        $member = $this->memberRepository->findOneBy(['num' => $parsedNum]);
+
+        if (!$member) {
+            $member = new Member();
         }
 
         if ($paymentMethod == '') {
