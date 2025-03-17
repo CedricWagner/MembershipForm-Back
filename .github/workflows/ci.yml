@@ -53,9 +53,6 @@ jobs:
           file_name: .env.test.local
       - name: Install Dependencies
         run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
-      -  
-        name: Create test database
-        run: php bin/console -e test doctrine:database:create
       -
         name: Run migrations
         run: php bin/console -e test doctrine:migrations:migrate --no-interaction
