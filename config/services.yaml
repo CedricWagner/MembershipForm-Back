@@ -5,6 +5,7 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     app.starting_num: '%env(int:APP_STARTING_NUM)%'
+    app.infomaniak_domain: '%env(INFOMANIAK_DOMAIN)%'
 
 services:
     # default configuration for services in *this* file
@@ -23,6 +24,9 @@ services:
     App\Service\Numerator:
         arguments:
             $startingNum: '%app.starting_num%'
+    App\Service\InfomaniakNewsletterManager:
+        arguments:
+            $domain: '%app.infomaniak_domain%'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

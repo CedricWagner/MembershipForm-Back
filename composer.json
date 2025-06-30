@@ -24,6 +24,8 @@
         "symfony/expression-language": "6.3.*",
         "symfony/flex": "^2",
         "symfony/framework-bundle": "6.3.*",
+        "symfony/http-client": "6.3.*",
+        "symfony/monolog-bundle": "^3.10",
         "symfony/property-access": "6.3.*",
         "symfony/property-info": "6.3.*",
         "symfony/runtime": "6.3.*",
@@ -89,7 +91,6 @@
         "phpunit/phpunit": "^9.5",
         "symfony/browser-kit": "6.3.*",
         "symfony/css-selector": "6.3.*",
-        "symfony/http-client": "6.3.*",
         "symfony/maker-bundle": "^1.50",
         "symfony/phpunit-bridge": "^6.3"
     }

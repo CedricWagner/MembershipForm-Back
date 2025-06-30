@@ -18,6 +18,15 @@ framework:
     php_errors:
         log: true
 
+    http_client:
+        scoped_clients:
+            # only requests matching scope will use these options
+            infomaniak.client:
+                scope: 'https://api\.infomaniak\.com'
+                headers:
+                    Accept: 'application/json'
+                    Authorization: 'bearer %env(INFOMANIAK_API_TOKEN)%'
+
 when@test:
     framework:
         test: true
