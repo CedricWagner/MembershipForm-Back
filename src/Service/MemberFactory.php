@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Member;
+use App\Entity\PaymentMethod;
 use App\Entity\User;
 use App\Repository\MemberRepository;
 use App\Repository\PaymentMethodRepository;
@@ -13,6 +14,37 @@ class MemberFactory
 {
     public function __construct(private EntityManagerInterface $entityManager, private PaymentMethodRepository $paymentMethodRepository, private MemberRepository $memberRepository)
     {
+    }
+
+    /**
+     * Create member entity.
+     */
+    public function createMember(
+        string $firstname,
+        string $lastname,
+        string $email,
+        float $amount,
+        \DateTime $date,
+        ?PaymentMethod $paymentMethod,
+        bool $willingToVolunteer,
+        bool $subscribedToNewsletter
+    ): Member {
+        $member = new Member();
+        $member->setFirstname($firstname);
+        $member->setLastname($lastname);
+        $member->setEmail($email);
+        $member->setAmount($amount);
+        $member->setDate($date);
+        if ($paymentMethod) {
+            $member->setPaymentMethod($paymentMethod);
+        }
+        $member->setWillingToVolunteer($willingToVolunteer);
+        $member->setSubscribedToNewsletter($subscribedToNewsletter);
+
+        $this->entityManager->persist($member);
+        $this->entityManager->flush();
+
+        return $member;
     }
 
     /**

@@ -31,6 +31,10 @@ jobs:
           envkey_DATABASE_URL:  ${{ secrets.DATABASE_URL }}
           envkey_CORS_ALLOW_ORIGIN: ${{ vars.CORS_ALLOW_ORIGIN }}
           envkey_JWT_PASSPHRASE: ${{ secrets.JWT_PASSPHRASE }}
+          envkey_NEWSLETTER_SERVICES: ${{ vars.NEWSLETTER_SERVICES }}
+          envkey_MAILCHIMP_API_KEY: ${{ secrets.MAILCHIMP_API_KEY }}
+          envkey_MAILCHIMP_BALISE: ${{ secrets.MAILCHIMP_BALISE }}
+          envkey_MAILCHIMP_LIST_ID: ${{ secrets.MAILCHIMP_LIST_ID }}
           file_name: .env.local
       # Install backend dependencies (Composer)
       - name: Validate composer.json and composer.lock
