@@ -30,6 +30,10 @@ Provides API endpoints to
 ### Make tests
 - `make test`
 
+### Newsletter
+
+Newsletter sync services are deactivated by default. You can add services by editing your .env.local file. Currently supported services : mailchimp.
+
 ### Contribution
 - todo
 
