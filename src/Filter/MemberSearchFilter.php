@@ -8,7 +8,7 @@ use ApiPlatform\Metadata\Operation;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\PropertyInfo\Type;
 
-class GlobalSearchFilter extends AbstractFilter
+class MemberSearchFilter extends AbstractFilter
 {
     protected function filterProperty(
         string $property, $value, QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, ?Operation $operation = null, array $context = []

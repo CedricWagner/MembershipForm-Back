@@ -3,11 +3,9 @@
 namespace App\Entity;
 
 use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
-use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\QueryParameter;
-use App\Filter\GlobalSearchFilter;
+use App\Filter\MemberSearchFilter;
 use App\Repository\MemberRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -17,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: MemberRepository::class)]
 #[ApiResource(normalizationContext: ['groups' => ['member']], paginationClientEnabled:true)]
 #[ApiFilter(DateFilter::class, properties: ['date'])]
-#[ApiFilter(GlobalSearchFilter::class, properties: ['search'])]
+#[ApiFilter(MemberSearchFilter::class, properties: ['search'])]
 class Member
 {
     #[ORM\Id]
